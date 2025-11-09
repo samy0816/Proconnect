@@ -10,7 +10,7 @@
 [build.environment]
   NODE_VERSION = "18"
   # Set your Render backend URL here (replace with your actual URL)
-  NEXT_PUBLIC_API_URL = "https://your-backend-name.onrender.com"
+  NEXT_PUBLIC_API_URL = "https://proconnect-hzl6.onrender.com"
 
 # Redirects for client-side routing
 [[redirects]]
