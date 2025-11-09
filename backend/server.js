@@ -18,8 +18,19 @@ dotenv.config();
 
 const app = express();
 
+// CORS Configuration - Allow your Netlify domain
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'https://proconnect-ai.netlify.app',
+    /\.netlify\.app$/ // Allow all Netlify preview deployments
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 // Serve static files from uploads directory
 app.use('/uploads', express.static('uploads'));
