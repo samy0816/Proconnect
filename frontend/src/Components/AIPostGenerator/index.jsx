@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './AIPostGenerator.module.css';
+import { BASE_URL } from '@/config';
 
 export default function AIPostGenerator({ isOpen, onClose, onGenerate }) {
     const [topic, setTopic] = useState('');
@@ -19,7 +20,7 @@ export default function AIPostGenerator({ isOpen, onClose, onGenerate }) {
         setGeneratedPost('');
 
         try {
-            const response = await fetch('http://localhost:5000/ai/generate-post', {
+            const response = await fetch(`${BASE_URL}/ai/generate-post`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

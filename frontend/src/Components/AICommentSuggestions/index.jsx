@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './AICommentSuggestions.module.css';
+import { BASE_URL } from '@/config';
 
 export default function AICommentSuggestions({ isOpen, onClose, postContent, onSelectComment }) {
     const [loading, setLoading] = useState(false);
@@ -12,7 +13,7 @@ export default function AICommentSuggestions({ isOpen, onClose, postContent, onS
         setSuggestions([]);
 
         try {
-            const response = await fetch('http://localhost:5000/ai/generate-comments', {
+            const response = await fetch(`${BASE_URL}/ai/generate-comments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
