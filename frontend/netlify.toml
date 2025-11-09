@@ -1,4 +1,5 @@
 # Netlify Configuration
+# Updated for proconnectdemo.netlify.app
 
 [build]
   command = "npm run build"
