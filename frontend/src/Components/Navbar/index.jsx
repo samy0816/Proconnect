@@ -43,6 +43,7 @@ export default function Navbar() {
                     <nav className={styles.navLinks}>
                         <a className={router.pathname === '/dashboard' ? styles.active : ''} onClick={() => router.push('/dashboard')}><FaHome /><span>Home</span></a>
                         <a className={router.pathname === '/discover' ? styles.active : ''} onClick={() => router.push('/discover')}><FaUserFriends /><span>My Network</span></a>
+                        <a className={router.pathname === '/connections' ? styles.active : ''} onClick={() => router.push('/connections')}><FaUserFriends /><span>Connections</span></a>
                         
                         <div className={styles.profileMenu}>
                             <button onClick={() => setShowDropdown(!showDropdown)} className={styles.profileBtn}>
