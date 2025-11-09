@@ -31,10 +31,15 @@ Your backend is ready for deployment with the following configurations:
 4. **Add Environment Variables**
    Go to "Environment" tab and add:
    ```
-   PORT=5000
-   MONGO_URL=your_mongodb_atlas_connection_string
-   HUGGING_FACE_API_KEY=your_hugging_face_api_key
+   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/linkedin?retryWrites=true&w=majority
+   HUGGING_FACE_API_KEY=hf_your_api_key_here
    ```
+   
+   ⚠️ **Important**: 
+   - Use your actual MongoDB Atlas connection string
+   - Replace `username` and `password` with your MongoDB credentials
+   - Replace `cluster.mongodb.net` with your actual cluster URL
+   - Use your actual Hugging Face API key
 
 5. **Deploy**
    - Click "Create Web Service"
@@ -152,10 +157,11 @@ app.use(cors({
 
 ### Backend (Render)
 ```env
-PORT=5000
-MONGO_URL=mongodb+srv://username:password@cluster.mongodb.net/dbname
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/linkedin?retryWrites=true&w=majority
 HUGGING_FACE_API_KEY=hf_xxxxxxxxxxxxx
 ```
+
+Note: PORT is automatically set by Render, no need to add it manually.
 
 ### Frontend (Netlify)
 ```env

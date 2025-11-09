@@ -37,14 +37,21 @@ app.use(express.static('uploads'));
 const start = async () => {
   try {
     console.log("Attempting to connect to MongoDB...");
+    console.log("Environment check:");
     console.log("MONGO_URL:", process.env.MONGO_URL ? "✓ Loaded" : "✗ Missing");
+    console.log("MONGODB_URI:", process.env.MONGODB_URI ? "✓ Loaded" : "✗ Missing");
     
-    // Try connecting without database name first
-    const testUrl = process.env.MONGO_URL.replace('/linkedin?', '/?');
-    console.log("Testing connection to:", testUrl.replace(/\/\/.*@/, '//***:***@'));
+    // Use MONGODB_URI or MONGO_URL
+    const mongoUrl = process.env.MONGODB_URI || process.env.MONGO_URL;
     
-    const connectDB = await mongoose.connect(process.env.MONGO_URL, {
-      serverSelectionTimeoutMS: 10000, // Increased timeout
+    if (!mongoUrl) {
+      throw new Error("MongoDB connection string not found. Please set MONGODB_URI or MONGO_URL environment variable.");
+    }
+    
+    console.log("Connecting to MongoDB...");
+    
+    const connectDB = await mongoose.connect(mongoUrl, {
+      serverSelectionTimeoutMS: 10000,
       connectTimeoutMS: 15000,
       socketTimeoutMS: 45000,
     });
