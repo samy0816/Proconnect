@@ -1,0 +1,227 @@
+.profileContainer {
+    padding: 2rem 0;
+}
+
+.profileHeader {
+    background-color: var(--card-background-color);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.profileBanner {
+    width: 100%;
+    height: 200px;
+    background-color: var(--hover-color);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.profilePicSection {
+    position: relative;
+    z-index: 2;
+    margin-top: 100px;
+    margin-bottom: 1rem;
+}
+
+.profilePic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--card-background-color);
+}
+
+.uploadBtn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.uploadBtn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.profileInfo {
+    z-index: 2;
+    position: relative;
+}
+
+.profileInfo h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.username {
+    color: var(--text-secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+.currentPost {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.profileActions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    z-index: 2;
+    position: relative;
+}
+
+.editBtn, .saveBtn, .downloadBtn, .cancelBtn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.editBtn:hover, .saveBtn:hover, .downloadBtn:hover, .cancelBtn:hover {
+    background: #004182;
+    transform: translateY(-2px);
+}
+
+.cancelBtn {
+    background: var(--hover-color);
+    color: var(--text-color);
+}
+
+.cancelBtn:hover {
+    background: #ccc;
+}
+
+.profileSection {
+    background: var(--card-background-color);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 1.5rem;
+}
+
+.sectionHeader {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.inputGroup {
+    margin-bottom: 1.5rem;
+}
+
+.inputGroup label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary-color);
+}
+
+.inputGroup input,
+.inputGroup textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.inputGroup input:focus,
+.inputGroup textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.listItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--hover-color);
+    border-radius: 8px;
+}
+
+.listItem p {
+    margin: 0;
+}
+
+.listItem strong {
+    font-weight: 600;
+}
+
+.removeBtn {
+    background: none;
+    border: none;
+    color: #E74C3C;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.addForm {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    align-items: flex-end;
+    margin-top: 1.5rem;
+}
+
+.addBtn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.addBtn:hover {
+    background: #004182;
+    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3);
+}

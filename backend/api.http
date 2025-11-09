@@ -1,0 +1,50 @@
+POST http://localhost:5000/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "password": "securepassword123",
+    "username": "johndoe"
+}
+
+###
+
+POST http://localhost:5000/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "john.doe@example.com",
+    "password": "securepassword123"
+}   
+
+
+###
+POST http://localhost:5000/get_user_and_profile HTTP/1.1
+Content-Type: application/json
+
+{
+    "token": "bb85e0141d1de680b51f8d2afbe74f7e9f50935187078fcaa109e94e21ffe0eb"
+}
+
+###
+POST http://localhost:5000/update_profile_data HTTP/1.1
+Content-Type: application/json
+
+{
+    "token": "bb85e0141d1de680b51f8d2afbe74f7e9f50935187078fcaa109e94e21ffe0eb",
+
+    "bio":"Experienced technology leader with a passion for innovation and driving business growth through cutting-edge solutions.",
+    "currentPost" : "CTO",
+    "education":[
+        {
+            "school":"IIT",
+            "degree":"B.Tech",
+            "fieldOfStudy":"Computer Science"
+        }
+    ]
+}
+
+###
+GET http://localhost:5000/get_all_users HTTP/1.1
+Content-Type: application/json

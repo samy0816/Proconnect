@@ -1,0 +1,193 @@
+.layoutContainer {
+    display: grid;
+    grid-template-columns: 225px 1fr 300px;
+    gap: 1.5rem;
+    max-width: 1120px;
+    margin: 1.5rem auto;
+}
+
+.leftSidebar, .rightSidebar {
+    position: sticky;
+    top: 72px; /* Navbar height + margin */
+    align-self: start;
+}
+
+.mainContent {
+    min-width: 0;
+}
+
+/* Generic Card Styling */
+.profileCard, .recentCard, .newsCard, .peopleCard {
+    background-color: var(--container-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+/* Left Sidebar: Profile Card */
+.profileCard {
+    text-align: center;
+}
+
+.profileBackground {
+    background-color: #a0b4b7;
+    height: 56px;
+}
+
+.profileImage {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2px solid white;
+    margin: -36px auto 0;
+    cursor: pointer;
+}
+
+.profileName {
+    margin: 0.75rem 0 0.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.profileHeadline {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+}
+
+.profileStats {
+    border-top: 1px solid var(--border-color);
+    padding: 1rem;
+    font-size: 0.8rem;
+}
+
+.profileStats > div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.profileStats strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Left Sidebar: Recent Card */
+.recentCard {
+    padding: 1rem;
+}
+
+.recentCard h4 {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.recentCard a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    padding: 0.25rem 0;
+    font-weight: 500;
+}
+
+.recentCard a:hover {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+/* Right Sidebar: News Card */
+.newsCard, .peopleCard {
+    padding: 1rem;
+}
+
+.newsCard h4, .peopleCard h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.newsCard ul {
+    list-style: none;
+}
+
+.newsCard li {
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.newsCard h5 {
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.newsCard span {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Right Sidebar: People Card */
+.personItem {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+}
+
+.personItem img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.personItem h5 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.personItem p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.personItem button {
+    margin-top: 0.25rem;
+    padding: 4px 12px;
+    border: 1px solid var(--text-secondary);
+    border-radius: 1rem;
+    background: transparent;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.personItem button:hover {
+    background-color: var(--background-color);
+    border-color: var(--text-color);
+    color: var(--text-color);
+}
+
+@media (max-width: 992px) {
+    .layoutContainer {
+        grid-template-columns: 225px 1fr;
+    }
+    .rightSidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .layoutContainer {
+        grid-template-columns: 1fr;
+    }
+    .leftSidebar {
+        display: none;
+    }
+}

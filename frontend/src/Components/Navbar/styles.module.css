@@ -1,0 +1,161 @@
+.header {
+    background-color: var(--card-background-color);
+    box-shadow: var(--box-shadow);
+    padding: 0 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 56px;
+}
+
+.logoSearch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.searchBar {
+    position: relative;
+}
+
+.searchBar input {
+    background-color: var(--background-color);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px 8px 32px;
+    width: 280px;
+    font-size: 0.9rem;
+}
+
+.navLinks {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.navLinks a, .profileBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    padding: 0 1rem;
+    height: 100%;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    font-size: 0.8rem;
+    gap: 2px;
+}
+
+.navLinks a:hover, .profileBtn:hover {
+    color: var(--text-color);
+}
+
+.navLinks a.active {
+    color: var(--text-color);
+    border-bottom-color: var(--text-color);
+}
+
+.navLinks a svg, .profileBtn svg {
+    font-size: 1.2rem;
+}
+
+.profileMenu {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.profileBtn {
+    background: none;
+    border: none;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--card-background-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    width: 220px;
+    padding: 0.5rem 0;
+    border: 1px solid var(--border-color);
+}
+
+.dropdownHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 0.5rem;
+}
+
+.dropdownName {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.dropdownUsername {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.dropdown a {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.dropdown a:hover {
+    background-color: var(--background-color);
+}
+
+.authButtons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.loginBtn, .joinBtn {
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    border: 1px solid var(--primary-color);
+    transition: all 0.2s ease;
+}
+
+.loginBtn {
+    color: var(--primary-color);
+    background-color: transparent;
+}
+
+.loginBtn:hover {
+    background-color: rgba(10, 102, 194, 0.1);
+}
+
+.joinBtn {
+    color: white;
+    background-color: var(--primary-color);
+}
+
+.joinBtn:hover {
+    background-color: var(--primary-hover);
+}
