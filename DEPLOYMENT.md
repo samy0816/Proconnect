@@ -164,9 +164,23 @@ HUGGING_FACE_API_KEY=hf_xxxxxxxxxxxxx
 Note: PORT is automatically set by Render, no need to add it manually.
 
 ### Frontend (Netlify)
-```env
-NEXT_PUBLIC_API_URL=https://your-backend.onrender.com
+
+**CRITICAL**: You MUST set the API URL in TWO places:
+
+#### 1. In `netlify.toml` file (line 13):
+```toml
+NEXT_PUBLIC_API_URL = "https://your-backend-name.onrender.com"
 ```
+
+#### 2. In Netlify Dashboard:
+- Go to Site settings → Environment variables
+- Add: `NEXT_PUBLIC_API_URL` = `https://your-backend-name.onrender.com`
+
+**Important Notes:**
+- Replace `your-backend-name` with your actual Render backend URL
+- NO trailing slash at the end of the URL
+- The URL should start with `https://`
+- After updating, trigger a **manual redeploy** in Netlify (Deploys → Trigger deploy → Clear cache and deploy)
 
 ---
 
