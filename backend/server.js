@@ -22,7 +22,7 @@ const app = express();
 const corsOptions = {
   origin: [
     'http://localhost:3000',
-    'https://proconnect-ai.netlify.app',
+    'https://proconnectdemo.netlify.app',
     /\.netlify\.app$/ // Allow all Netlify preview deployments
   ],
   credentials: true,
