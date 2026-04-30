@@ -1,67 +1,12 @@
+import { HfInference } from "@huggingface/inference";
 import dotenv from "dotenv";
 dotenv.config();
 
+// Support both HF_API_KEY and HUGGING_FACE_API_KEY
 const HF_API_KEY = process.env.HUGGING_FACE_API_KEY || process.env.HF_API_KEY;
-
-// Chat-capable models using HF's OpenAI-compatible endpoint (newer API format)
-const HF_CHAT_MODELS = [
-  "mistralai/Mistral-7B-Instruct-v0.2",
-  "HuggingFaceH4/zephyr-7b-beta",
-  "microsoft/Phi-3-mini-4k-instruct",
-];
-
-// Call HF Inference API using the OpenAI-compatible /v1/chat/completions endpoint
-async function callHfApi(systemMsg, userMsg, maxTokens = 300) {
-  if (!HF_API_KEY) throw new Error("HF_API_KEY is not set on this server");
-
-  let lastError;
-  for (const model of HF_CHAT_MODELS) {
-    // Correct HF OpenAI-compatible URL — model goes in the body, NOT in the path
-    const url = `https://api-inference.huggingface.co/v1/chat/completions`;
-    try {
-      console.log(`Trying model: ${model}`);
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${HF_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model,
-          messages: [
-            { role: "system", content: systemMsg },
-            { role: "user", content: userMsg },
-          ],
-          max_tokens: maxTokens,
-          temperature: 0.7,
-          stream: false,
-        }),
-      });
-
-      const raw = await response.text();
-      if (!response.ok) {
-        console.warn(`Model ${model} → HTTP ${response.status}: ${raw.slice(0, 300)}`);
-        lastError = new Error(`HF ${response.status} for ${model}: ${raw.slice(0, 200)}`);
-        continue;
-      }
-
-      const data = JSON.parse(raw);
-      if (data?.error) {
-        console.warn(`Model ${model} returned error:`, data.error);
-        lastError = new Error(data.error);
-        continue;
-      }
-
-      const text = data?.choices?.[0]?.message?.content?.trim() || "";
-      console.log(`✅ Success with model: ${model}, length: ${text.length}`);
-      return text;
-    } catch (err) {
-      console.warn(`Model ${model} threw: ${err.message}`);
-      lastError = err;
-    }
-  }
-  throw lastError || new Error("All AI models failed");
-}
+// Using a model that supports text-generation with the router
+const HF_MODEL = "meta-llama/Llama-3.2-3B-Instruct";
+const hf = new HfInference(HF_API_KEY);
 
 export const generatePost = async (req, res) => {
   try {
@@ -72,7 +17,7 @@ export const generatePost = async (req, res) => {
     console.log("Tone:", tone);
     console.log("API Key exists:", !!HF_API_KEY);
     console.log("API Key length:", HF_API_KEY?.length);
-    console.log("Models to try:", HF_CHAT_MODELS);
+    console.log("Model:", HF_MODEL);
     
     if (!topic) return res.status(400).json({ message: "Topic is required" });
     
@@ -91,9 +36,23 @@ Make it engaging with a clear message.
 
 IMPORTANT: Do NOT use markdown formatting. Do NOT use ** for bold, # for headings, or any other markdown symbols. Write in plain text only with natural paragraphs.`;
 
-    console.log("🚀 Sending request to Hugging Face Inference API...");
+    console.log("🚀 Sending request to Hugging Face Router API...");
 
-    let generatedText = await callHfApi(systemMessage, userMessage, 350);
+    // Use chatCompletion instead of textGeneration
+    const output = await hf.chatCompletion({
+      model: HF_MODEL,
+      messages: [
+        { role: "system", content: systemMessage },
+        { role: "user", content: userMessage }
+      ],
+      max_tokens: 300,
+      temperature: 0.7,
+    });
+
+    console.log("✅ Response received from Hugging Face");
+    console.log("Output type:", typeof output);
+
+    let generatedText = output?.choices?.[0]?.message?.content?.trim() || "";
     
     // Remove markdown formatting
     generatedText = generatedText
@@ -113,13 +72,10 @@ IMPORTANT: Do NOT use markdown formatting. Do NOT use ** for bold, # for heading
     });
   } catch (error) {
     console.error("❌ Error generating post:", error.message);
-    console.error("HTTP status:", error.statusCode || error.status || 'N/A');
-    console.error("API Key set:", !!HF_API_KEY);
-    console.error("Error details:", JSON.stringify(error, null, 2));
+    console.error("Error details:", error);
     return res.status(500).json({
       message: "Error generating post. " + error.message,
-      error: error.message,
-      hint: !HF_API_KEY ? 'HF_API_KEY is not set on the server' : undefined
+      error: error.message
     });
   }
 };
@@ -143,7 +99,18 @@ Generate 3 different comment suggestions (each 1–2 sentences). Number them cle
 
     console.log("🚀 Sending request for comment suggestions...");
 
-    const generatedText = await callHfApi(systemMessage, userMessage, 250);
+    // Use chatCompletion API
+    const output = await hf.chatCompletion({
+      model: HF_MODEL,
+      messages: [
+        { role: "system", content: systemMessage },
+        { role: "user", content: userMessage }
+      ],
+      max_tokens: 200,
+      temperature: 0.8,
+    });
+
+    const generatedText = output?.choices?.[0]?.message?.content?.trim() || "";
 
     return res.status(200).json({
       message: "Comment suggestions generated successfully",
