@@ -4,8 +4,8 @@ dotenv.config();
 
 // Support both HF_API_KEY and HUGGING_FACE_API_KEY
 const HF_API_KEY = process.env.HUGGING_FACE_API_KEY || process.env.HF_API_KEY;
-// Using a model that supports text-generation with the router
-const HF_MODEL = "meta-llama/Llama-3.2-3B-Instruct"; // Supports text-generation
+// Non-gated model that works reliably on the free tier
+const HF_MODEL = "HuggingFaceH4/zephyr-7b-beta";
 const hf = new HfInference(HF_API_KEY);
 
 export const generatePost = async (req, res) => {

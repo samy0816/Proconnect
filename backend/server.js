@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import dns from "dns/promises";
 
 import postRoutes from "./routes/posts.routes.js";
 import UserRoutes from "./routes/user.routes.js";
@@ -34,6 +35,25 @@ app.use(cors(corsOptions));
 app.use(express.json());
 // Serve static files from uploads directory
 app.use('/uploads', express.static('uploads'));
+
+// Diagnostic endpoint to test SRV DNS resolution from the running host
+app.get('/diag/mongo', async (req, res) => {
+  try {
+    const mongoUrl = process.env.MONGODB_URI || process.env.MONGO_URL;
+    if (!mongoUrl) return res.status(400).json({ error: 'MONGO_URL or MONGODB_URI not set' });
+    if (!mongoUrl.startsWith('mongodb+srv://')) return res.status(200).json({ message: 'Connection string is not SRV (mongodb+srv). No SRV lookup needed.' });
+
+    // Extract host part after '@' if present, otherwise take between 'mongodb+srv://' and '/'
+    const afterPrefix = mongoUrl.split('mongodb+srv://')[1] || '';
+    const hostPart = afterPrefix.includes('@') ? afterPrefix.split('@')[1] : afterPrefix.split('/')[0];
+    const srvName = `_mongodb._tcp.${hostPart}`;
+
+    const records = await dns.resolveSrv(srvName);
+    res.json({ srvName, records });
+  } catch (err) {
+    res.status(500).json({ error: err.message, code: err.code || null, stack: err.stack });
+  }
+});
 
 // Routes
 app.get("/", (req, res) => {
