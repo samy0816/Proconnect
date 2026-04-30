@@ -38,9 +38,10 @@ IMPORTANT: Do NOT use markdown formatting. Do NOT use ** for bold, # for heading
 
     console.log("🚀 Sending request to Hugging Face Router API...");
 
-    // Use chatCompletion instead of textGeneration
+    // Use chatCompletion with explicit provider
     const output = await hf.chatCompletion({
       model: HF_MODEL,
+      provider: "hf-inference",
       messages: [
         { role: "system", content: systemMessage },
         { role: "user", content: userMessage }
@@ -72,10 +73,13 @@ IMPORTANT: Do NOT use markdown formatting. Do NOT use ** for bold, # for heading
     });
   } catch (error) {
     console.error("❌ Error generating post:", error.message);
-    console.error("Error details:", error);
+    console.error("HTTP status:", error.statusCode || error.status || 'N/A');
+    console.error("API Key set:", !!HF_API_KEY);
+    console.error("Error details:", JSON.stringify(error, null, 2));
     return res.status(500).json({
       message: "Error generating post. " + error.message,
-      error: error.message
+      error: error.message,
+      hint: !HF_API_KEY ? 'HF_API_KEY is not set on the server' : undefined
     });
   }
 };
@@ -99,9 +103,10 @@ Generate 3 different comment suggestions (each 1–2 sentences). Number them cle
 
     console.log("🚀 Sending request for comment suggestions...");
 
-    // Use chatCompletion API
+    // Use chatCompletion API with explicit provider
     const output = await hf.chatCompletion({
       model: HF_MODEL,
+      provider: "hf-inference",
       messages: [
         { role: "system", content: systemMessage },
         { role: "user", content: userMessage }
