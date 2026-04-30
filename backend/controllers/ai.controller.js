@@ -16,7 +16,8 @@ async function callHfApi(systemMsg, userMsg, maxTokens = 300) {
 
   let lastError;
   for (const model of HF_CHAT_MODELS) {
-    const url = `https://api-inference.huggingface.co/models/${model}/v1/chat/completions`;
+    // Correct HF OpenAI-compatible URL — model goes in the body, NOT in the path
+    const url = `https://api-inference.huggingface.co/v1/chat/completions`;
     try {
       console.log(`Trying model: ${model}`);
       const response = await fetch(url, {
