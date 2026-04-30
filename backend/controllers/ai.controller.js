@@ -2,35 +2,60 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const HF_API_KEY = process.env.HUGGING_FACE_API_KEY || process.env.HF_API_KEY;
-const HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.1";
-const HF_API_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
 
-// Call HF Inference API directly via fetch (bypasses SDK provider routing)
+// Models tried in order — first available wins
+const HF_MODELS = [
+  "mistralai/Mistral-7B-Instruct-v0.2",
+  "meta-llama/Meta-Llama-3-8B-Instruct",
+  "gpt2",
+];
+
+// Call HF Inference API directly via fetch with automatic model fallback
 async function callHfApi(prompt, maxTokens = 300) {
-  const response = await fetch(HF_API_URL, {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${HF_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      inputs: prompt,
-      parameters: {
-        max_new_tokens: maxTokens,
-        temperature: 0.7,
-        return_full_text: false,
-      },
-    }),
-  });
+  let lastError;
+  for (const model of HF_MODELS) {
+    const url = `https://api-inference.huggingface.co/models/${model}`;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${HF_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          inputs: prompt,
+          parameters: {
+            max_new_tokens: maxTokens,
+            temperature: 0.7,
+            return_full_text: false,
+          },
+        }),
+      });
 
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`HF API error ${response.status}: ${errText}`);
+      if (!response.ok) {
+        const errText = await response.text();
+        console.warn(`Model ${model} failed with ${response.status}: ${errText.slice(0, 200)}`);
+        lastError = new Error(`HF API error ${response.status} for ${model}`);
+        continue; // try next model
+      }
+
+      const data = await response.json();
+      // Model loading — HF returns {estimated_time: ...} if model is warming up
+      if (data?.error?.includes("loading")) {
+        console.warn(`Model ${model} is loading, trying next...`);
+        lastError = new Error(`Model ${model} is loading`);
+        continue;
+      }
+
+      const text = Array.isArray(data) ? data[0]?.generated_text?.trim() : data?.generated_text?.trim() || "";
+      console.log(`✅ Success with model: ${model}`);
+      return text;
+    } catch (err) {
+      console.warn(`Model ${model} threw error: ${err.message}`);
+      lastError = err;
+    }
   }
-
-  const data = await response.json();
-  // HF text-generation returns [{generated_text: "..."}]
-  return Array.isArray(data) ? data[0]?.generated_text?.trim() : data?.generated_text?.trim() || "";
+  throw lastError || new Error("All AI models failed");
 }
 
 export const generatePost = async (req, res) => {
@@ -42,7 +67,7 @@ export const generatePost = async (req, res) => {
     console.log("Tone:", tone);
     console.log("API Key exists:", !!HF_API_KEY);
     console.log("API Key length:", HF_API_KEY?.length);
-    console.log("Model:", HF_MODEL);
+    console.log("Models to try:", HF_MODELS);
     
     if (!topic) return res.status(400).json({ message: "Topic is required" });
     
