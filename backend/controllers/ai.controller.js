@@ -3,19 +3,22 @@ dotenv.config();
 
 const HF_API_KEY = process.env.HUGGING_FACE_API_KEY || process.env.HF_API_KEY;
 
-// Models tried in order — first available wins
-const HF_MODELS = [
+// Chat-capable models using HF's OpenAI-compatible endpoint (newer API format)
+const HF_CHAT_MODELS = [
   "mistralai/Mistral-7B-Instruct-v0.2",
-  "meta-llama/Meta-Llama-3-8B-Instruct",
-  "gpt2",
+  "HuggingFaceH4/zephyr-7b-beta",
+  "microsoft/Phi-3-mini-4k-instruct",
 ];
 
-// Call HF Inference API directly via fetch with automatic model fallback
-async function callHfApi(prompt, maxTokens = 300) {
+// Call HF Inference API using the OpenAI-compatible /v1/chat/completions endpoint
+async function callHfApi(systemMsg, userMsg, maxTokens = 300) {
+  if (!HF_API_KEY) throw new Error("HF_API_KEY is not set on this server");
+
   let lastError;
-  for (const model of HF_MODELS) {
-    const url = `https://api-inference.huggingface.co/models/${model}`;
+  for (const model of HF_CHAT_MODELS) {
+    const url = `https://api-inference.huggingface.co/models/${model}/v1/chat/completions`;
     try {
+      console.log(`Trying model: ${model}`);
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -23,35 +26,36 @@ async function callHfApi(prompt, maxTokens = 300) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          inputs: prompt,
-          parameters: {
-            max_new_tokens: maxTokens,
-            temperature: 0.7,
-            return_full_text: false,
-          },
+          model,
+          messages: [
+            { role: "system", content: systemMsg },
+            { role: "user", content: userMsg },
+          ],
+          max_tokens: maxTokens,
+          temperature: 0.7,
+          stream: false,
         }),
       });
 
+      const raw = await response.text();
       if (!response.ok) {
-        const errText = await response.text();
-        console.warn(`Model ${model} failed with ${response.status}: ${errText.slice(0, 200)}`);
-        lastError = new Error(`HF API error ${response.status} for ${model}`);
-        continue; // try next model
-      }
-
-      const data = await response.json();
-      // Model loading — HF returns {estimated_time: ...} if model is warming up
-      if (data?.error?.includes("loading")) {
-        console.warn(`Model ${model} is loading, trying next...`);
-        lastError = new Error(`Model ${model} is loading`);
+        console.warn(`Model ${model} → HTTP ${response.status}: ${raw.slice(0, 300)}`);
+        lastError = new Error(`HF ${response.status} for ${model}: ${raw.slice(0, 200)}`);
         continue;
       }
 
-      const text = Array.isArray(data) ? data[0]?.generated_text?.trim() : data?.generated_text?.trim() || "";
-      console.log(`✅ Success with model: ${model}`);
+      const data = JSON.parse(raw);
+      if (data?.error) {
+        console.warn(`Model ${model} returned error:`, data.error);
+        lastError = new Error(data.error);
+        continue;
+      }
+
+      const text = data?.choices?.[0]?.message?.content?.trim() || "";
+      console.log(`✅ Success with model: ${model}, length: ${text.length}`);
       return text;
     } catch (err) {
-      console.warn(`Model ${model} threw error: ${err.message}`);
+      console.warn(`Model ${model} threw: ${err.message}`);
       lastError = err;
     }
   }
@@ -67,7 +71,7 @@ export const generatePost = async (req, res) => {
     console.log("Tone:", tone);
     console.log("API Key exists:", !!HF_API_KEY);
     console.log("API Key length:", HF_API_KEY?.length);
-    console.log("Models to try:", HF_MODELS);
+    console.log("Models to try:", HF_CHAT_MODELS);
     
     if (!topic) return res.status(400).json({ message: "Topic is required" });
     
@@ -88,8 +92,7 @@ IMPORTANT: Do NOT use markdown formatting. Do NOT use ** for bold, # for heading
 
     console.log("🚀 Sending request to Hugging Face Inference API...");
 
-    const prompt = `[INST] ${systemMessage}\n\n${userMessage} [/INST]`;
-    let generatedText = await callHfApi(prompt, 350);
+    let generatedText = await callHfApi(systemMessage, userMessage, 350);
     
     // Remove markdown formatting
     generatedText = generatedText
@@ -139,8 +142,7 @@ Generate 3 different comment suggestions (each 1–2 sentences). Number them cle
 
     console.log("🚀 Sending request for comment suggestions...");
 
-    const prompt = `[INST] ${systemMessage}\n\n${userMessage} [/INST]`;
-    const generatedText = await callHfApi(prompt, 250);
+    const generatedText = await callHfApi(systemMessage, userMessage, 250);
 
     return res.status(200).json({
       message: "Comment suggestions generated successfully",
