@@ -5,7 +5,7 @@ dotenv.config();
 // Support both HF_API_KEY and HUGGING_FACE_API_KEY
 const HF_API_KEY = process.env.HUGGING_FACE_API_KEY || process.env.HF_API_KEY;
 // Non-gated model that works reliably on the free tier
-const HF_MODEL = "HuggingFaceH4/zephyr-7b-beta";
+const HF_MODEL = "Qwen/Qwen2.5-1.5B-Instruct";
 const hf = new HfInference(HF_API_KEY);
 
 export const generatePost = async (req, res) => {
