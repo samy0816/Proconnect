@@ -1,12 +1,37 @@
-import { HfInference } from "@huggingface/inference";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Support both HF_API_KEY and HUGGING_FACE_API_KEY
 const HF_API_KEY = process.env.HUGGING_FACE_API_KEY || process.env.HF_API_KEY;
-// Non-gated model available on hf-inference free tier
-const HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.3";
-const hf = new HfInference(HF_API_KEY);
+const HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.1";
+const HF_API_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
+
+// Call HF Inference API directly via fetch (bypasses SDK provider routing)
+async function callHfApi(prompt, maxTokens = 300) {
+  const response = await fetch(HF_API_URL, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${HF_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      inputs: prompt,
+      parameters: {
+        max_new_tokens: maxTokens,
+        temperature: 0.7,
+        return_full_text: false,
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`HF API error ${response.status}: ${errText}`);
+  }
+
+  const data = await response.json();
+  // HF text-generation returns [{generated_text: "..."}]
+  return Array.isArray(data) ? data[0]?.generated_text?.trim() : data?.generated_text?.trim() || "";
+}
 
 export const generatePost = async (req, res) => {
   try {
@@ -36,24 +61,10 @@ Make it engaging with a clear message.
 
 IMPORTANT: Do NOT use markdown formatting. Do NOT use ** for bold, # for headings, or any other markdown symbols. Write in plain text only with natural paragraphs.`;
 
-    console.log("🚀 Sending request to Hugging Face Router API...");
+    console.log("🚀 Sending request to Hugging Face Inference API...");
 
-    // Use chatCompletion with explicit provider
-    const output = await hf.chatCompletion({
-      model: HF_MODEL,
-      provider: "hf-inference",
-      messages: [
-        { role: "system", content: systemMessage },
-        { role: "user", content: userMessage }
-      ],
-      max_tokens: 300,
-      temperature: 0.7,
-    });
-
-    console.log("✅ Response received from Hugging Face");
-    console.log("Output type:", typeof output);
-
-    let generatedText = output?.choices?.[0]?.message?.content?.trim() || "";
+    const prompt = `[INST] ${systemMessage}\n\n${userMessage} [/INST]`;
+    let generatedText = await callHfApi(prompt, 350);
     
     // Remove markdown formatting
     generatedText = generatedText
@@ -103,19 +114,8 @@ Generate 3 different comment suggestions (each 1–2 sentences). Number them cle
 
     console.log("🚀 Sending request for comment suggestions...");
 
-    // Use chatCompletion API with explicit provider
-    const output = await hf.chatCompletion({
-      model: HF_MODEL,
-      provider: "hf-inference",
-      messages: [
-        { role: "system", content: systemMessage },
-        { role: "user", content: userMessage }
-      ],
-      max_tokens: 200,
-      temperature: 0.8,
-    });
-
-    const generatedText = output?.choices?.[0]?.message?.content?.trim() || "";
+    const prompt = `[INST] ${systemMessage}\n\n${userMessage} [/INST]`;
+    const generatedText = await callHfApi(prompt, 250);
 
     return res.status(200).json({
       message: "Comment suggestions generated successfully",
