@@ -51,6 +51,17 @@
     gap: 8px;
 }
 
+.demoBadge {
+    font-size: 0.65rem;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
 .closeBtn {
     background: none;
     border: none;

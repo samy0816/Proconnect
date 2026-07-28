@@ -1,9 +1,22 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { loginDemo } from "@/config/redux/action/middleware/reducer/Authreducer";
+import { loadDemoPosts } from "@/config/redux/action/middleware/reducer/Postreducer";
 import styles from "@/styles/Home.module.css";
 import UserLayout from "@/layout/UserLayout";
 
 export default function Home() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+
+  const handleDemoLogin = () => {
+    dispatch(loginDemo());
+    dispatch(loadDemoPosts());
+    router.push("/dashboard");
+  };
+
   return (
     <>
       <Head>
@@ -21,9 +34,14 @@ export default function Home() {
             <p className={styles.heroSubtitle}>
               Connect with colleagues, share your achievements, and discover new career opportunities. Your next chapter starts here.
             </p>
-            <Link href="/login" legacyBehavior>
-              <a className={styles.heroButton}>Get Started</a>
-            </Link>
+            <div className={styles.heroButtons}>
+              <Link href="/login" legacyBehavior>
+                <a className={styles.heroButton}>Get Started</a>
+              </Link>
+              <button onClick={handleDemoLogin} className={styles.heroDemoButton}>
+                ⚡ Try Demo
+              </button>
+            </div>
           </div>
           <div className={styles.heroRight}>
             <img 

@@ -8,7 +8,7 @@ import {
   postComment,
   incrementPostLike
 } from '@/config/redux/action/postAction';
-import { reset as resetPost } from '@/config/redux/action/middleware/reducer/Postreducer';
+import { reset as resetPost, loadDemoComments, likeDemoPost, addDemoComment, addDemoPost, deleteDemoPost } from '@/config/redux/action/middleware/reducer/Postreducer';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAboutUser, getallUsers } from '@/config/redux/action/authAction';
 import UserLayout from '@/layout/UserLayout';
@@ -33,6 +33,7 @@ export default function Dashboard() {
     const [currentPostForComment, setCurrentPostForComment] = useState(null);
 
     useEffect(() => {
+        if (authState.isDemo) return; // Demo mode: skip all server calls
         if (authState.isTokenthere) {
             dispatch(getallPosts());
             dispatch(getAboutUser({ token: localStorage.getItem('token') }));
@@ -40,14 +41,26 @@ export default function Dashboard() {
         if (!authState.all_profiles_fetched) {
             dispatch(getallUsers());
         }
-    }, [authState.isTokenthere, dispatch, authState.all_profiles_fetched]);
+    }, [authState.isTokenthere, dispatch, authState.all_profiles_fetched, authState.isDemo]);
 
     const handleUpload = async () => {
         if (!postContent && !fileContent) return;
-        await dispatch(createPost({ file: fileContent, body: postContent }));
+        if (authState.isDemo) {
+            dispatch(addDemoPost({
+                _id: 'demo_p_' + Date.now(),
+                body: postContent,
+                likes: 0,
+                media: '',
+                fileType: '',
+                createdAt: new Date().toISOString(),
+                userId: { _id: authState.user?.id || 'demo_user_001', name: authState.user?.name || 'Sarah Chen', username: authState.user?.username || 'sarahchen', profilePicture: '' },
+            }));
+        } else {
+            await dispatch(createPost({ file: fileContent, body: postContent }));
+            dispatch(getallPosts());
+        }
         setPostContent('');
         setFileContent(null);
-        dispatch(getallPosts());
     };
 
     const handleAIGenerate = (generatedText) => {
@@ -102,6 +115,7 @@ export default function Dashboard() {
                         isOpen={showAIModal}
                         onClose={() => setShowAIModal(false)}
                         onGenerate={handleAIGenerate}
+                        isDemo={authState.isDemo}
                     />
 
                     <AICommentSuggestions
@@ -112,6 +126,7 @@ export default function Dashboard() {
                         }}
                         postContent={currentPostForComment?.body || ''}
                         onSelectComment={handleAICommentSelect}
+                        isDemo={authState.isDemo}
                     />
 
                     <div className={styles.postFeed}>
@@ -142,15 +157,25 @@ export default function Dashboard() {
                                         <div className={styles.postFooter}>
                                             <button
                                                 onClick={() => {
-                                                    dispatch(incrementPostLike({ post_id: post._id }));
-                                                    dispatch(getallPosts());
+                                                    if (authState.isDemo) {
+                                                        dispatch(likeDemoPost(post._id));
+                                                    } else {
+                                                        dispatch(incrementPostLike({ post_id: post._id }));
+                                                        dispatch(getallPosts());
+                                                    }
                                                 }}
                                                 className={styles.footerButton}
                                             >
                                                 <FaRegThumbsUp /> <span>Like ({post.likes || 0})</span>
                                             </button>
                                             <button
-                                                onClick={() => dispatch(getAllComments({ post_id: post._id }))}
+                                                onClick={() => {
+                                                    if (authState.isDemo) {
+                                                        dispatch(loadDemoComments(post._id));
+                                                    } else {
+                                                        dispatch(getAllComments({ post_id: post._id }));
+                                                    }
+                                                }}
                                                 className={styles.footerButton}
                                             >
                                                 <FaRegCommentDots /> <span>Comment</span>
@@ -169,8 +194,12 @@ export default function Dashboard() {
                                                 <button
                                                     onClick={async () => {
                                                         if (window.confirm('Are you sure you want to delete this post?')) {
-                                                            await dispatch(deletePost({ post_id: post._id }));
-                                                            await dispatch(getallPosts());
+                                                            if (authState.isDemo) {
+                                                                dispatch(deleteDemoPost(post._id));
+                                                            } else {
+                                                                await dispatch(deletePost({ post_id: post._id }));
+                                                                await dispatch(getallPosts());
+                                                            }
                                                         }
                                                     }}
                                                     className={`${styles.footerButton} ${styles.deleteButton}`}
@@ -219,11 +248,21 @@ export default function Dashboard() {
                                     placeholder="Add a comment..."
                                     onKeyPress={(e) => {
                                         if (e.key === 'Enter' && commentText.trim()) {
-                                            (async () => {
-                                                await dispatch(postComment({ post_id: postState.postId, body: commentText }));
-                                                await dispatch(getAllComments({ post_id: postState.postId }));
+                                            if (authState.isDemo) {
+                                                const newComment = {
+                                                    _id: 'demo_c' + Date.now(),
+                                                    body: commentText,
+                                                    userId: { _id: 'demo_user_001', name: 'Sarah Chen', username: 'sarahchen', profilePicture: '' }
+                                                };
+                                                dispatch(addDemoComment(newComment));
                                                 setCommentText('');
-                                            })();
+                                            } else {
+                                                (async () => {
+                                                    await dispatch(postComment({ post_id: postState.postId, body: commentText }));
+                                                    await dispatch(getAllComments({ post_id: postState.postId }));
+                                                    setCommentText('');
+                                                })();
+                                            }
                                         }
                                     }}
                                 />
@@ -241,9 +280,19 @@ export default function Dashboard() {
                                 <button
                                     onClick={async () => {
                                         if (commentText.trim()) {
-                                            await dispatch(postComment({ post_id: postState.postId, body: commentText }));
-                                            await dispatch(getAllComments({ post_id: postState.postId }));
-                                            setCommentText('');
+                                            if (authState.isDemo) {
+                                                const newComment = {
+                                                    _id: 'demo_c' + Date.now(),
+                                                    body: commentText,
+                                                    userId: { _id: 'demo_user_001', name: 'Sarah Chen', username: 'sarahchen', profilePicture: '' }
+                                                };
+                                                dispatch(addDemoComment(newComment));
+                                                setCommentText('');
+                                            } else {
+                                                await dispatch(postComment({ post_id: postState.postId, body: commentText }));
+                                                await dispatch(getAllComments({ post_id: postState.postId }));
+                                                setCommentText('');
+                                            }
                                         }
                                     }}
                                     className={styles.postCommentBtn}

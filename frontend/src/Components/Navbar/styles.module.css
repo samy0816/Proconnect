@@ -159,3 +159,18 @@
 .joinBtn:hover {
     background-color: var(--primary-hover);
 }
+
+/* 📌 Demo mode banner */
+.demoBanner {
+    background: linear-gradient(135deg, #0a66c2, #004182);
+    color: white;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.01em;
+}
+.demoBannerHint {
+    opacity: 0.85;
+    margin-left: 0.5rem;
+    font-weight: 400;
+}

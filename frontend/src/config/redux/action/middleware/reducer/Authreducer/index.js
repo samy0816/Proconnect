@@ -7,12 +7,20 @@ import { getAboutUser, getallUsers } from "../../../authAction";
 
 import { login,registerUser } from "../../../authAction";
 import { act } from "react";
+import {
+  DEMO_USER,
+  DEMO_PROFILE,
+  DEMO_ALL_USERS,
+  DEMO_CONNECTIONS,
+  DEMO_CONNECTION_REQUESTS,
+} from "@/config/demoData";
 const initialState = {
   user:[],
   iserror:false,
   issuccess:false,
   isloading:false,
   loggedin:false,
+  isDemo:false,
     message:"",
     isTokenthere:false,
     profilefetched:false,
@@ -37,6 +45,24 @@ handleloginUser:(state)=>{
     },
     setTokenNotthere :(state)=>{
         state.isTokenthere=false;
+    },
+    // 📌 Demo login — populates entire auth state with sample data (NO server needed)
+    loginDemo: (state) => {
+      state.loggedin = true;
+      state.isDemo = true;
+      state.isTokenthere = true;
+      state.isloading = false;
+      state.iserror = false;
+      state.issuccess = true;
+      state.profilefetched = true;
+      state.all_profiles_fetched = true;
+      state.message = "Demo mode activated — exploring sample data";
+      state.user = DEMO_USER;
+      state.profile = DEMO_PROFILE;
+      state.all_users = DEMO_ALL_USERS;
+      state.all_profiles = DEMO_ALL_USERS;
+      state.connections = DEMO_CONNECTIONS;
+      state.connectionRequest = DEMO_CONNECTION_REQUESTS;
     },
 },
 
@@ -120,5 +146,5 @@ extraReducers:(builder)=>{
     })
 }
 })  
-export const{reset,emptyMessage, setTokenIsthere,setTokenNotthere}= authSlice.actions;
+export const{reset,emptyMessage, setTokenIsthere,setTokenNotthere, loginDemo}= authSlice.actions;
 export default authSlice.reducer;

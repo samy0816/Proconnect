@@ -16,11 +16,12 @@ export default function Discoverpage() {
 
 
     useEffect(() => {
+        if(authState.isDemo) return; // Demo mode: skip server call
         if(!authState.all_profiles_fetched) {
             dispatch(getallUsers());
         }
 
-    }, [authState.all_profiles_fetched, dispatch]);
+    }, [authState.all_profiles_fetched, dispatch, authState.isDemo]);
   return (
       <UserLayout>
              <DashboardLayout>

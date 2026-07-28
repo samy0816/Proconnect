@@ -10,15 +10,22 @@ import styles from './connections.module.css';
 export default function MyConnectionsPage() {
     const dispatch = useDispatch();
     const router = useRouter();
+    const authState = useSelector((state) => state.auth);
     const [connections, setConnections] = useState([]);
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState('connections'); // 'connections' or 'requests'
+    const [activeTab, setActiveTab] = useState('connections');
 
     useEffect(() => {
+        if (authState.isDemo) {
+            // Use demo data from Redux
+            setConnections(authState.connections || []);
+            setRequests(authState.connectionRequest || []);
+            return;
+        }
         fetchConnections();
         fetchRequests();
-    }, []);
+    }, [authState.isDemo, authState.connections, authState.connectionRequest]);
 
     const fetchConnections = async () => {
         setLoading(true);

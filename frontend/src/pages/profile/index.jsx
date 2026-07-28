@@ -22,11 +22,12 @@ export default function MyProfile() {
     const [newWork, setNewWork] = useState({ company: '', position: '', years: '' });
 
     useEffect(() => {
+        if (authState.isDemo) return; // Demo mode: skip server call
         const token = localStorage.getItem('token');
         if (token && !authState.profilefetched) {
             dispatch(getAboutUser({ token }));
         }
-    }, [authState.profilefetched, dispatch]);
+    }, [authState.profilefetched, dispatch, authState.isDemo]);
 
     useEffect(() => {
         if (authState.user) {
@@ -47,6 +48,7 @@ export default function MyProfile() {
     }, [authState.user, authState.profile]);
 
     const handleProfilePicUpload = async (e) => {
+        if (authState.isDemo) return; // No-op in demo mode
         const file = e.target.files[0];
         if (file) {
             await dispatch(uploadProfilePicture(file));
@@ -56,6 +58,11 @@ export default function MyProfile() {
     };
 
     const handleSaveProfile = async () => {
+        if (authState.isDemo) {
+            // In demo mode, just update local state
+            setEditing(false);
+            return;
+        }
         await dispatch(updateProfile(profileData));
         await dispatch(updateUser(userData));
         const token = localStorage.getItem('token');

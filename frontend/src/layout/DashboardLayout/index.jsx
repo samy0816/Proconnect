@@ -12,13 +12,14 @@ export default function DashboardLayout({ children }) {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if (authState.isDemo) return; // Demo mode: skip auth guard
         const token = localStorage.getItem('token');
         if (!token) {
             router.push('/login');
             return;
         }
         dispatch(setTokenIsthere());
-    }, [router, dispatch]);
+    }, [router, dispatch, authState.isDemo]);
 
     return (
         <div className={styles.layoutContainer}>

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import styles from "./styles.module.css";
 import { login, registerUser } from "@/config/redux/action/authAction";
-import { reset as resetAuth } from "@/config/redux/action/middleware/reducer/Authreducer";
+import { reset as resetAuth, loginDemo } from "@/config/redux/action/middleware/reducer/Authreducer";
+import { loadDemoPosts } from "@/config/redux/action/middleware/reducer/Postreducer";
 
 function LoginComponent() {
   const authState = useSelector((state) => state.auth);
@@ -16,20 +17,22 @@ function LoginComponent() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [localError, setLocalError] = useState("");
+  const navigatedRef = useRef(false);
 
   useEffect(() => {
-    if (authState.loggedin) {
+    if (authState.loggedin && !navigatedRef.current) {
+      navigatedRef.current = true;
       router.push("/dashboard");
     }
-  }, [authState.loggedin, router]);
+  }, [authState.loggedin]);
 
   useEffect(() => {
     // Clear errors when toggling forms or when auth state changes
     setLocalError("");
-    if(authState.iserror || authState.issuccess) {
+    if ((authState.iserror || authState.issuccess) && !authState.isDemo) {
       dispatch(resetAuth());
     }
-  }, [isLoginMethod, dispatch]);
+  }, [isLoginMethod, dispatch, authState.iserror, authState.issuccess, authState.isDemo]);
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -55,10 +58,24 @@ function LoginComponent() {
     setIsLoginMethod(!isLoginMethod);
   };
 
+  const handleDemoLogin = () => {
+    dispatch(loginDemo());
+    dispatch(loadDemoPosts());
+    // Navigation handled by useEffect watching authState.loggedin
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.cardContainer}>
         <div className={styles.leftCardContainer}>
+          {/* 🔥 DEMO LOGIN BUTTON — instant access for recruiters/testers */}
+          <button onClick={handleDemoLogin} className={styles.demoButton} type="button">
+            ⚡ Try Demo — Explore Instantly
+          </button>
+          <div className={styles.divider}>
+            <span>or use your account</span>
+          </div>
+
           <h1 className={styles.cardLeftHeading}>
             {isLoginMethod ? "Welcome Back" : "Create an Account"}
           </h1>

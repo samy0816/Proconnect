@@ -28,6 +28,7 @@ export default function Navbar() {
     };
 
     return (
+        <>
         <header className={styles.header}>
             <div className={`${styles.container} container`}>
                 <div className={styles.logoSearch}>
@@ -73,5 +74,12 @@ export default function Navbar() {
                 )}
             </div>
         </header>
+        {authState.isDemo && (
+            <div className={styles.demoBanner}>
+                ⚡ <strong>Demo Mode</strong> — You're viewing sample data. No server required. 
+                <span className={styles.demoBannerHint}>Recruiters: explore all features instantly!</span>
+            </div>
+        )}
+        </>
     );
 }

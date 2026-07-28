@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getallPosts, createPost, deletePost, incrementPostLike, getAllComments, postComment } from "../../../postAction";
+import { DEMO_POSTS, DEMO_COMMENTS } from "@/config/demoData";
 const initialState = {
 posts: [],
     isError: false,
@@ -21,7 +22,46 @@ const postSlice=createSlice({
         },
         resetPostId:(state)=>{
             state.postId = "";
-        }
+        },
+        // 📌 Load demo posts — no server needed
+        loadDemoPosts: (state) => {
+            state.posts = DEMO_POSTS;
+            state.postFetched = true;
+            state.isLoading = false;
+            state.isError = false;
+            state.message = "Demo posts loaded";
+        },
+        // 📌 Load demo comments for a specific post
+        loadDemoComments: (state, action) => {
+            const postId = action.payload;
+            state.postId = postId;
+            state.comments = DEMO_COMMENTS[postId] || [];
+        },
+        // 📌 Like a post in demo mode
+        likeDemoPost: (state, action) => {
+            const postId = action.payload;
+            const post = state.posts.find(p => p._id === postId);
+            if (post) {
+                post.likes = (post.likes || 0) + 1;
+            }
+        },
+        // 📌 Add a comment in demo mode
+        addDemoComment: (state, action) => {
+            state.comments.push(action.payload);
+            if (DEMO_COMMENTS[state.postId]) {
+                DEMO_COMMENTS[state.postId].push(action.payload);
+            } else {
+                DEMO_COMMENTS[state.postId] = [action.payload];
+            }
+        },
+        // 📌 Create a post in demo mode
+        addDemoPost: (state, action) => {
+            state.posts.unshift(action.payload);
+        },
+        // 📌 Delete a post in demo mode
+        deleteDemoPost: (state, action) => {
+            state.posts = state.posts.filter(p => p._id !== action.payload);
+        },
     },
     extraReducers:(builder)=>{
         builder
@@ -101,5 +141,5 @@ const postSlice=createSlice({
     }
 });
 
-export const { reset, resetPostId } = postSlice.actions;
+export const { reset, resetPostId, loadDemoPosts, loadDemoComments, likeDemoPost, addDemoComment, addDemoPost, deleteDemoPost } = postSlice.actions;
 export default postSlice.reducer;

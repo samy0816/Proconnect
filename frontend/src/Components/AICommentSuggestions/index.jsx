@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './AICommentSuggestions.module.css';
 import { BASE_URL } from '@/config';
 
-export default function AICommentSuggestions({ isOpen, onClose, postContent, onSelectComment }) {
+export default function AICommentSuggestions({ isOpen, onClose, postContent, onSelectComment, isDemo }) {
     const [loading, setLoading] = useState(false);
     const [suggestions, setSuggestions] = useState([]);
     const [error, setError] = useState('');
@@ -11,6 +11,19 @@ export default function AICommentSuggestions({ isOpen, onClose, postContent, onS
         setLoading(true);
         setError('');
         setSuggestions([]);
+
+        // 🔥 Demo mode: simulate AI with a realistic delay
+        if (isDemo) {
+            setTimeout(() => {
+                setSuggestions([
+                    "Great insights! Thanks for sharing your perspective on this — it really resonates with what I've been seeing in the industry lately.",
+                    "This is such an important topic. I appreciate how you've framed the discussion and would love to hear more about your experience with this.",
+                    "Couldn't agree more! The points you raised are spot-on. Would be great to connect and discuss this further — I'm working on something similar.",
+                ]);
+                setLoading(false);
+            }, 1200);
+            return;
+        }
 
         try {
             const response = await fetch(`${BASE_URL}/ai/generate-comments`, {
@@ -70,7 +83,7 @@ export default function AICommentSuggestions({ isOpen, onClose, postContent, onS
         <div className={styles.overlay} onClick={handleClose}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.header}>
-                    <h2>💬 AI Comment Suggestions</h2>
+                    <h2>💬 AI Comment Suggestions {isDemo && <span className={styles.demoBadge}>Demo</span>}</h2>
                     <button className={styles.closeBtn} onClick={handleClose}>×</button>
                 </div>
 

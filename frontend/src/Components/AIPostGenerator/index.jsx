@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './AIPostGenerator.module.css';
 import { BASE_URL } from '@/config';
 
-export default function AIPostGenerator({ isOpen, onClose, onGenerate }) {
+export default function AIPostGenerator({ isOpen, onClose, onGenerate, isDemo }) {
     const [topic, setTopic] = useState('');
     const [tone, setTone] = useState('professional');
     const [loading, setLoading] = useState(false);
@@ -18,6 +18,20 @@ export default function AIPostGenerator({ isOpen, onClose, onGenerate }) {
         setLoading(true);
         setError('');
         setGeneratedPost('');
+
+        // 🔥 Demo mode: simulate AI with a realistic delay
+        if (isDemo) {
+            setTimeout(() => {
+                const demoResponse = `I'm excited to share some thoughts on ${topic.trim()}! This is a topic that's been on my mind lately, and I believe it's crucial for professionals in our field to engage with it meaningfully. 
+
+The landscape around ${topic.trim()} is evolving rapidly, and staying ahead means continuous learning and adaptation. I've seen firsthand how embracing new perspectives on this can transform the way we approach our work and collaborate with others.
+
+What are your thoughts on ${topic.trim()}? I'd love to hear different viewpoints and experiences from this amazing community. Let's start a conversation!`;
+                setGeneratedPost(demoResponse);
+                setLoading(false);
+            }, 1500);
+            return;
+        }
 
         try {
             const response = await fetch(`${BASE_URL}/ai/generate-post`, {
@@ -68,7 +82,7 @@ export default function AIPostGenerator({ isOpen, onClose, onGenerate }) {
         <div className={styles.overlay} onClick={handleClose}>
             <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                 <div className={styles.header}>
-                    <h2>✨ AI Post Generator</h2>
+                    <h2>✨ AI Post Generator {isDemo && <span className={styles.demoBadge}>Demo</span>}</h2>
                     <button className={styles.closeBtn} onClick={handleClose}>×</button>
                 </div>
 
