@@ -110,7 +110,7 @@
 
 .topicInput:focus {
     outline: none;
-    border-color: #0a66c2;
+    border-color: #3525cd;
     box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
 }
 
@@ -133,7 +133,7 @@
 
 .toneSelect:focus {
     outline: none;
-    border-color: #0a66c2;
+    border-color: #3525cd;
     box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
 }
 
@@ -145,7 +145,7 @@
 .generateBtn {
     width: 100%;
     padding: 14px 24px;
-    background: linear-gradient(135deg, #0a66c2 0%, #004182 100%);
+    background: linear-gradient(135deg, #3525cd 0%, #4d44e3 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -224,7 +224,7 @@
 
 .generatedText:focus {
     outline: none;
-    border-color: #0a66c2;
+    border-color: #3525cd;
     box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
 }
 
@@ -249,8 +249,8 @@
 
 .regenerateBtn:hover:not(:disabled) {
     background: #f9fafb;
-    border-color: #0a66c2;
-    color: #0a66c2;
+    border-color: #3525cd;
+    color: #3525cd;
 }
 
 .regenerateBtn:disabled {

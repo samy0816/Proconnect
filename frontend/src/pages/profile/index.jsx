@@ -6,6 +6,7 @@ import DashboardLayout from '@/layout/DashboardLayout';
 import { getAboutUser } from '@/config/redux/action/authAction';
 import { uploadProfilePicture, updateProfile, updateUser } from '@/config/redux/action/profileAction';
 import { BASE_URL } from '@/config';
+import { getAvatarUrl } from '@/utils/avatar';
 import styles from './profile.module.css';
 import { generateResume } from '@/utils/resumeGenerator';
 import { FaCamera, FaEdit, FaSave, FaPlus, FaTrash, FaDownload, FaTimes } from 'react-icons/fa';
@@ -107,7 +108,7 @@ export default function MyProfile() {
                         <div className={styles.profilePicSection}>
                             <img
                                 className={styles.profilePic}
-                                src={authState.user?.profilePicture ? `${BASE_URL}/uploads/${authState.user.profilePicture}` : '/images/default-profile.png'}
+                                src={getAvatarUrl(authState.user?.name || 'User', 96)}
                                 alt="Profile"
                             />
                             <label htmlFor="profilePicInput" className={styles.uploadBtn}>

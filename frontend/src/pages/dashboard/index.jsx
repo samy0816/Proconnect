@@ -17,6 +17,7 @@ import AIPostGenerator from '@/Components/AIPostGenerator';
 import AICommentSuggestions from '@/Components/AICommentSuggestions';
 import styles from "./index.module.css";
 import { BASE_URL } from '@/config';
+import { getAvatarUrl } from '@/utils/avatar';
 import { FaPhotoVideo, FaRegThumbsUp, FaRegCommentDots, FaShare, FaTrash } from 'react-icons/fa';
 
 export default function Dashboard() {
@@ -27,6 +28,7 @@ export default function Dashboard() {
 
     const [postContent, setPostContent] = useState('');
     const [fileContent, setFileContent] = useState(null);
+    const [enhancing, setEnhancing] = useState(false);
     const [commentText, setCommentText] = useState('');
     const [showAIModal, setShowAIModal] = useState(false);
     const [showAICommentModal, setShowAICommentModal] = useState(false);
@@ -67,6 +69,39 @@ export default function Dashboard() {
         setPostContent(generatedText);
     };
 
+    const handleAIEnhance = async () => {
+        if (!postContent.trim()) return;
+        setEnhancing(true);
+        try {
+            if (authState.isDemo) {
+                // Demo: simulate enhancement
+                await new Promise(r => setTimeout(r, 1200));
+                const enhanced = postContent
+                    .replace(/\bi\b/gi, 'I')
+                    .replace(/\bim\b/gi, "I'm")
+                    .replace(/\bdont\b/gi, "don't")
+                    .replace(/\bcant\b/gi, "can't")
+                    .replace(/\bwont\b/gi, "won't")
+                    .trim();
+                const demoExtra = "\n\nI'd love to hear your thoughts and experiences on this — let's start a conversation!";
+                setPostContent((enhanced || postContent) + demoExtra);
+            } else {
+                const response = await fetch(`${BASE_URL}/ai/enhance-post`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ draft: postContent }),
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Enhancement failed');
+                setPostContent(data.enhancedPost);
+            }
+        } catch (err) {
+            console.error('Enhance error:', err);
+        } finally {
+            setEnhancing(false);
+        }
+    };
+
     const handleAICommentSelect = (comment) => {
         setCommentText(comment);
     };
@@ -78,7 +113,7 @@ export default function Dashboard() {
                     <div className={styles.createPostContainer}>
                         <img
                             className={styles.userProfileImage}
-                            src={authState.user?.profilePicture ? `${BASE_URL}/uploads/${authState.user.profilePicture}` : '/images/default-profile.png'}
+                            src={getAvatarUrl(authState.user?.name || 'User')}
                             alt="Profile"
                         />
                         <div className={styles.postInputWrapper}>
@@ -90,7 +125,7 @@ export default function Dashboard() {
                             />
                             <div className={styles.postActions}>
                                 <label htmlFor="fileUpload" className={styles.actionButton}>
-                                    <FaPhotoVideo color="#70B5F9" />
+                                    <FaPhotoVideo color="#a78bfa" />
                                     <span>Photo/Video</span>
                                 </label>
                                 <input
@@ -102,6 +137,11 @@ export default function Dashboard() {
                                 <button onClick={() => setShowAIModal(true)} className={`${styles.actionButton} ${styles.aiButton}`}>
                                     ✨ AI Generate
                                 </button>
+                                {postContent.length > 20 && (
+                                    <button onClick={handleAIEnhance} disabled={enhancing} className={`${styles.actionButton} ${styles.enhanceButton}`}>
+                                        {enhancing ? '⏳ Polishing...' : '✨ Enhance'}
+                                    </button>
+                                )}
                                 {postContent.length > 0 && (
                                     <button onClick={handleUpload} className={styles.postSubmitBtn}>
                                         Post
@@ -138,7 +178,7 @@ export default function Dashboard() {
                                         <div className={styles.postHeader}>
                                             <img
                                                 className={styles.userProfileImage}
-                                                src={post.userId.profilePicture ? `${BASE_URL}/uploads/${post.userId.profilePicture}` : '/images/default-profile.png'}
+                                                src={getAvatarUrl(post.userId?.name || 'User')}
                                                 alt="User"
                                             />
                                             <div>
@@ -231,7 +271,7 @@ export default function Dashboard() {
                                 ) : (
                                     postState.comments.map((comment) => (
                                         <div className={styles.comment} key={comment._id}>
-                                            <img src={`${BASE_URL}/uploads/${comment.userId?.profilePicture || 'default-profile.png'}`} alt="" />
+                                            <img src={getAvatarUrl(comment.userId?.name || 'User', 48)} alt="" />
                                             <div className={styles.commentBody}>
                                                 <p className={styles.commentAuthor}>{comment.userId?.name}</p>
                                                 <p>{comment.body}</p>

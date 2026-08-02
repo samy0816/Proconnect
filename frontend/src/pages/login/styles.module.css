@@ -98,7 +98,7 @@
 }
 
 .cardLeftButtonContainer button:hover {
-    background-color: #004182;
+    background-color: #4d44e3;
 }
 
 .toggleText {
@@ -117,9 +117,9 @@
 .demoButton {
     width: 100%;
     padding: 0.9rem;
-    border: 2px solid #0a66c2;
+    border: 2px solid #3525cd;
     border-radius: 6px;
-    background: linear-gradient(135deg, #0a66c2, #0084ff);
+    background: linear-gradient(135deg, #3525cd, #4d44e3);
     color: white;
     font-size: 1rem;
     font-weight: 700;
@@ -160,8 +160,12 @@
         display: none;
     }
     .leftCardContainer {
-        padding: 3rem 2rem;
+        padding: 2.5rem 1.5rem;
     }
+}
+@media (max-width: 480px) {
+    .leftCardContainer { padding: 1.5rem 1rem; }
+    .cardLeftHeading { font-size: 1.6rem; }
 }
 
 

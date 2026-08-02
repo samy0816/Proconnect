@@ -4,7 +4,7 @@ export const generateResume = (userData, profileData) => {
   const doc = new jsPDF();
   
   // Set up fonts and colors
-  const primaryColor = [10, 102, 194]; // LinkedIn blue
+  const primaryColor = [139, 92, 246]; // ProConnect purple
   const textColor = [31, 41, 55]; // Dark gray
   const secondaryColor = [107, 114, 128]; // Medium gray
   

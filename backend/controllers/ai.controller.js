@@ -2,125 +2,88 @@ import { HfInference } from "@huggingface/inference";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Support both HF_API_KEY and HUGGING_FACE_API_KEY
 const HF_API_KEY = process.env.HUGGING_FACE_API_KEY || process.env.HF_API_KEY;
-// Using a model that supports text-generation with the router
-const HF_MODEL = "meta-llama/Llama-3.2-3B-Instruct";
+const HF_MODEL = "Qwen/Qwen3-8B";
 const hf = new HfInference(HF_API_KEY);
+
+async function callHF(systemMsg, userMsg, maxTokens) {
+  const output = await hf.chatCompletion({
+    model: HF_MODEL,
+    messages: [
+      { role: "system", content: systemMsg },
+      { role: "user", content: userMsg },
+    ],
+    max_tokens: maxTokens,
+    temperature: 0.7,
+  });
+  return output?.choices?.[0]?.message?.content?.trim() || "";
+}
 
 export const generatePost = async (req, res) => {
   try {
     const { topic, tone } = req.body;
-    
-    console.log("=== AI POST GENERATION REQUEST ===");
-    console.log("Topic:", topic);
-    console.log("Tone:", tone);
-    console.log("API Key exists:", !!HF_API_KEY);
-    console.log("API Key length:", HF_API_KEY?.length);
-    console.log("Model:", HF_MODEL);
-    
+
+    console.log("=== AI POST GENERATION ===");
+    console.log("Topic:", topic, "| Tone:", tone);
+    console.log("API Key:", !!HF_API_KEY);
+
     if (!topic) return res.status(400).json({ message: "Topic is required" });
-    
-    if (!HF_API_KEY) {
-      console.error("❌ HF_API_KEY is not set!");
-      return res.status(500).json({ 
-        message: "AI service not configured. Please set HF_API_KEY in .env file" 
-      });
-    }
+    if (!HF_API_KEY) return res.status(500).json({ message: "AI service not configured. Set HF_API_KEY." });
 
-    const systemMessage = `You are a professional LinkedIn content creator. Generate engaging, professional LinkedIn posts.`;
-    const userMessage = `Write a professional LinkedIn post about "${topic}". 
-The tone should be ${tone || 'professional and engaging'}. 
-Include relevant insights and keep it concise (150-250 words). 
-Make it engaging with a clear message.
+    const systemMsg = "You are a professional content writer. Generate engaging, thoughtful posts.";
+    const userMsg = `Write a professional post about "${topic}". Tone: ${tone || 'professional and engaging'}. Keep it 120-200 words. Write in plain paragraphs — no markdown, no asterisks, no hashtags.`;
 
-IMPORTANT: Do NOT use markdown formatting. Do NOT use ** for bold, # for headings, or any other markdown symbols. Write in plain text only with natural paragraphs.`;
+    console.log("🚀 Calling HF API...");
+    let text = await callHF(systemMsg, userMsg, 350);
 
-    console.log("🚀 Sending request to Hugging Face Router API...");
+    text = text.replace(/\*\*/g, '').replace(/\*/g, '').replace(/^#{1,6}\s+/gm, '').replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1').replace(/`{1,3}[^`]+`{1,3}/g, '').trim();
 
-    // Use chatCompletion instead of textGeneration
-    const output = await hf.chatCompletion({
-      model: HF_MODEL,
-      messages: [
-        { role: "system", content: systemMessage },
-        { role: "user", content: userMessage }
-      ],
-      max_tokens: 300,
-      temperature: 0.7,
-    });
-
-    console.log("✅ Response received from Hugging Face");
-    console.log("Output type:", typeof output);
-
-    let generatedText = output?.choices?.[0]?.message?.content?.trim() || "";
-    
-    // Remove markdown formatting
-    generatedText = generatedText
-      .replace(/\*\*/g, '') // Remove ** bold
-      .replace(/\*/g, '')   // Remove * italic
-      .replace(/^#{1,6}\s+/gm, '') // Remove # headings
-      .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1') // Convert [text](url) to text
-      .replace(/`{1,3}([^`]+)`{1,3}/g, '$1') // Remove ` code blocks
-      .trim();
-    
-    console.log("Generated text length:", generatedText.length);
-
-    return res.status(200).json({
-      message: "Post generated successfully",
-      generatedPost: generatedText,
-      topic
-    });
+    console.log("✅ Generated, length:", text.length);
+    return res.status(200).json({ message: "Post generated successfully", generatedPost: text, topic });
   } catch (error) {
-    console.error("❌ Error generating post:", error.message);
-    console.error("Error details:", error);
-    return res.status(500).json({
-      message: "Error generating post. " + error.message,
-      error: error.message
-    });
+    console.error("❌ Post gen error:", error.message);
+    return res.status(500).json({ message: "Error generating post. " + error.message });
   }
 };
 
-// Generate professional comment suggestions
 export const generateCommentSuggestions = async (req, res) => {
   try {
     const { postContent } = req.body;
+    if (!postContent) return res.status(400).json({ message: "Post content is required" });
+    if (!HF_API_KEY) return res.status(500).json({ message: "AI service not configured." });
 
-    if (!postContent) {
-      return res.status(400).json({ message: "Post content is required" });
-    }
+    const systemMsg = "You write thoughtful, professional comments on posts.";
+    const userMsg = `Based on this post, suggest exactly 3 concise, professional comments. Number them 1, 2, 3.\n\nPost:\n"${postContent}"`;
 
-    const systemMessage = `You are a professional LinkedIn user who writes thoughtful, engaging comments.`;
-    const userMessage = `Based on this LinkedIn post, suggest 3 professional and thoughtful comments.
+    console.log("🚀 Calling HF for comments...");
+    let text = await callHF(systemMsg, userMsg, 250);
 
-Post:
-"${postContent}"
-
-Generate 3 different comment suggestions (each 1–2 sentences). Number them clearly.`;
-
-    console.log("🚀 Sending request for comment suggestions...");
-
-    // Use chatCompletion API
-    const output = await hf.chatCompletion({
-      model: HF_MODEL,
-      messages: [
-        { role: "system", content: systemMessage },
-        { role: "user", content: userMessage }
-      ],
-      max_tokens: 200,
-      temperature: 0.8,
-    });
-
-    const generatedText = output?.choices?.[0]?.message?.content?.trim() || "";
-
-    return res.status(200).json({
-      message: "Comment suggestions generated successfully",
-      suggestions: generatedText,
-    });
+    return res.status(200).json({ message: "Comment suggestions generated", suggestions: text });
   } catch (error) {
-    console.error("❌ Error generating comments:", error);
-    return res.status(500).json({
-      message: "Error generating comments",
-      error: error.message,
-    });
+    console.error("❌ Comment gen error:", error.message);
+    return res.status(500).json({ message: "Error generating comments", error: error.message });
+  }
+};
+
+// ✨ AI Post Enhancer — polish a rough draft into a professional post
+export const enhancePost = async (req, res) => {
+  try {
+    const { draft } = req.body;
+    if (!draft) return res.status(400).json({ message: "Draft text is required" });
+    if (!HF_API_KEY) return res.status(500).json({ message: "AI service not configured." });
+
+    const systemMsg = "You are an expert editor for a professional networking platform. You polish rough drafts into engaging, professional posts.";
+    const userMsg = `Polish this rough draft into a professional, engaging post. Fix grammar, improve flow, and make it more compelling. Keep the same core message and length. Return ONLY the polished text — no explanations, no markdown.\n\nDraft:\n"${draft}"`;
+
+    console.log("🚀 Enhancing post...");
+    let text = await callHF(systemMsg, userMsg, 400);
+
+    text = text.replace(/\*\*/g, '').replace(/\*/g, '').replace(/^#{1,6}\s+/gm, '').replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1').replace(/`{1,3}[^`]+`{1,3}/g, '').trim();
+
+    console.log("✅ Enhanced, length:", text.length);
+    return res.status(200).json({ message: "Post enhanced successfully", enhancedPost: text });
+  } catch (error) {
+    console.error("❌ Enhance error:", error.message);
+    return res.status(500).json({ message: "Error enhancing post. " + error.message });
   }
 };

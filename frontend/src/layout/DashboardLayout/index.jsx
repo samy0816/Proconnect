@@ -5,6 +5,7 @@ import { setTokenIsthere } from '@/config/redux/action/middleware/reducer/Authre
 import { useDispatch, useSelector } from 'react-redux';
 import { FaUserCircle, FaNewspaper, FaUsers } from 'react-icons/fa';
 import { BASE_URL } from '@/config';
+import { getAvatarUrl } from '@/utils/avatar';
 
 export default function DashboardLayout({ children }) {
     const authState = useSelector((state) => state.auth);
@@ -24,40 +25,6 @@ export default function DashboardLayout({ children }) {
     return (
         <div className={styles.layoutContainer}>
             <div className={styles.leftSidebar}>
-                <div className={styles.profileCard}>
-                    <div className={styles.profileBackground}></div>
-                    <img 
-                        src={authState.user?.profilePicture ? `${BASE_URL}/uploads/${authState.user.profilePicture}` : '/images/default-profile.png'} 
-                        alt="Profile" 
-                        className={styles.profileImage}
-                        onClick={() => router.push('/profile')}
-                    />
-                    <h3 className={styles.profileName}>{authState.user?.name}</h3>
-                    <p className={styles.profileHeadline}>{authState.profile?.currentPost || 'Web Developer'}</p>
-                    <div className={styles.profileStats}>
-                        <div>
-                            <span>Connections</span>
-                            <strong>{authState.connections?.length || 0}</strong>
-                        </div>
-                        <div>
-                            <span>Who's viewed your profile</span>
-                            <strong>24</strong>
-                        </div>
-                    </div>
-                </div>
-                <div className={styles.recentCard}>
-                    <h4>Recent</h4>
-                    <a href="#"><FaNewspaper /><span>React Best Practices</span></a>
-                    <a href="#"><FaUsers /><span>UI/UX Design Group</span></a>
-                    <a href="#"><FaNewspaper /><span>Next.js 14 Features</span></a>
-                </div>
-            </div>
-
-            <div className={styles.mainContent}>
-                {children}
-            </div>
-
-            <div className={styles.rightSidebar}>
                 <div className={styles.newsCard}>
                     <h4>ProConnect News</h4>
                     <ul>
@@ -80,7 +47,7 @@ export default function DashboardLayout({ children }) {
                     {authState.all_profiles_fetched && authState.all_profiles.slice(0, 3).map((profile) => (
                         <div key={profile._id} className={styles.personItem}>
                             <img 
-                                src={profile.userId?.profilePicture ? `${BASE_URL}/uploads/${profile.userId.profilePicture}` : '/images/default-profile.png'} 
+                                src={getAvatarUrl(profile.userId?.name || 'User', 48)} 
                                 alt={profile.userId?.name} 
                             />
                             <div>
@@ -90,6 +57,40 @@ export default function DashboardLayout({ children }) {
                             </div>
                         </div>
                     ))}
+                </div>
+            </div>
+
+            <div className={styles.mainContent}>
+                {children}
+            </div>
+
+            <div className={styles.rightSidebar}>
+                <div className={styles.profileCard}>
+                    <div className={styles.profileBackground}></div>
+                    <img 
+                        src={getAvatarUrl(authState.user?.name || 'User', 72)} 
+                        alt="Profile" 
+                        className={styles.profileImage}
+                        onClick={() => router.push('/profile')}
+                    />
+                    <h3 className={styles.profileName}>{authState.user?.name}</h3>
+                    <p className={styles.profileHeadline}>{authState.profile?.currentPost || 'Web Developer'}</p>
+                    <div className={styles.profileStats}>
+                        <div>
+                            <span>Connections</span>
+                            <strong>{authState.connections?.length || 0}</strong>
+                        </div>
+                        <div>
+                            <span>Who's viewed your profile</span>
+                            <strong>24</strong>
+                        </div>
+                    </div>
+                </div>
+                <div className={styles.recentCard}>
+                    <h4>Recent</h4>
+                    <a href="#"><FaNewspaper /><span>React Best Practices</span></a>
+                    <a href="#"><FaUsers /><span>UI/UX Design Group</span></a>
+                    <a href="#"><FaNewspaper /><span>Next.js 14 Features</span></a>
                 </div>
             </div>
         </div>

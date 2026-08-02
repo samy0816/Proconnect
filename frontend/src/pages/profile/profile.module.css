@@ -108,7 +108,7 @@
 }
 
 .editBtn:hover, .saveBtn:hover, .downloadBtn:hover, .cancelBtn:hover {
-    background: #004182;
+    background: #4d44e3;
     transform: translateY(-2px);
 }
 
@@ -222,6 +222,16 @@
 }
 
 .addBtn:hover {
-    background: #004182;
-    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3);
+    background: #4d44e3;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+    .profileContainer { padding: 1rem; gap: 1rem; }
+    .profileHeader { flex-direction: column; text-align: center; }
+    .profileInfo { align-items: center; }
+}
+@media (max-width: 480px) {
+    .profileContainer { padding: 0.5rem; }
 }

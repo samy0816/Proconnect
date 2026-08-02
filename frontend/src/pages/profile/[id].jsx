@@ -5,6 +5,7 @@ import UserLayout from '@/layout/UserLayout';
 import DashboardLayout from '@/layout/DashboardLayout';
 import clientserver from '@/config';
 import { BASE_URL } from '@/config';
+import { getAvatarUrl } from '@/utils/avatar';
 import { sendConnectionRequest, getMyConnections, getConnectionRequests } from '@/config/redux/action/profileAction';
 import styles from './profile.module.css';
 
@@ -170,7 +171,7 @@ export default function UserProfilePage(){
               <div className={styles.profileHeader}>
                 <div className={styles.profilePicSection}>
                   <img 
-                    src={`${BASE_URL}/uploads/${profile.userId?.profilePicture || 'default-profile.png'}`} 
+                    src={getAvatarUrl(profile.userId?.name || 'User', 96)} 
                     alt="profile" 
                     className={styles.profilePic}
                   />

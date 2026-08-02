@@ -9,122 +9,169 @@
 
 .createPostContainer {
     background-color: var(--card-background-color);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     display: flex;
-    gap: 1rem;
-    box-shadow: var(--box-shadow);
+    gap: 12px;
 }
 
 .userProfileImage {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     object-fit: cover;
+    flex-shrink: 0;
 }
 
 .postInputWrapper {
     flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+    min-width: 0;
 }
 
 .postTextarea {
     width: 100%;
-    border: none;
-    background-color: transparent;
-    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: #fff;
+    font-family: var(--font-body);
+    font-size: 14px;
     min-height: 80px;
     resize: none;
-    padding: 0.5rem;
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: 1rem;
+    padding: 12px;
+    margin-bottom: 12px;
     color: var(--text-color);
-}
-
-.postTextarea:focus {
     outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.postTextarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(53,37,205,0.1);
 }
 
 .postActions {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 4px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
 }
 
 .actionButton {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
     cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.2s;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background-color 0.15s;
     border: none;
     background-color: transparent;
     color: var(--text-secondary-color);
+    white-space: nowrap;
+    font-family: var(--font-body);
 }
+.actionButton:hover { background-color: var(--surface-container-low); }
 
-.actionButton:hover {
-    background-color: var(--hover-color);
-}
-
-.aiButton {
-    color: #8E44AD;
-}
+.aiButton { color: var(--primary-hover); }
+.enhanceButton { color: #059669; }
+.enhanceButton:hover { background-color: rgba(5,150,105,0.08); }
 
 .postSubmitBtn {
     background-color: var(--primary-color);
-    color: white;
+    color: #fff;
     border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 20px;
+    padding: 8px 24px;
+    border-radius: 999px;
     font-weight: 600;
+    font-size: 14px;
+    font-family: var(--font-body);
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: box-shadow 0.15s;
+    margin-left: auto;
 }
-
-.postSubmitBtn:hover {
-    background-color: #004182;
-}
+.postSubmitBtn:hover { box-shadow: 0 4px 12px rgba(53,37,205,0.3); }
 
 .postFeed {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 16px;
 }
 
 .postCard {
     background-color: var(--card-background-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     overflow: hidden;
+    padding: 24px;
 }
+
+.postCard:hover { background-color: #fcfaff; }
 
 .postHeader {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
+    gap: 12px;
+    margin-bottom: 16px;
 }
-
 .postAuthorName {
-    font-weight: 600;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 16px;
     color: var(--text-color);
 }
-
 .postAuthorUsername {
-    font-size: 0.85rem;
+    font-size: 13px;
     color: var(--text-secondary-color);
 }
 
 .postBody {
-    padding: 0 1.5rem 1rem 1.5rem;
     line-height: 1.6;
     color: var(--text-color);
     white-space: pre-wrap;
+    font-size: 15px;
+    margin-bottom: 16px;
 }
+
+.postMedia { width: 100%; overflow: hidden; border-radius: 8px; margin-bottom: 16px; }
+.postMedia img { width: 100%; height: auto; }
+
+.postFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+    gap: 4px;
+}
+
+.footerButton {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--text-secondary-color);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-body);
+    transition: color 0.15s, background-color 0.15s;
+    border-radius: 8px;
+}
+.footerButton:hover {
+    color: var(--primary-color);
+    background-color: var(--surface-container-low);
+}
+
+.deleteButton { color: #ba1a1a; }
+.deleteButton:hover { background-color: #ffdad6; }
 
 .postMedia {
     width: 100%;
@@ -141,32 +188,50 @@
 .postFooter {
     display: flex;
     justify-content: space-around;
-    padding: 0.5rem 0;
+    padding: 0.4rem 1rem;
     border-top: 1px solid var(--border-color);
 }
 
 .footerButton {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     background: none;
     border: none;
     color: var(--text-secondary-color);
-    padding: 0.75rem 1rem;
-    flex-grow: 1;
-    justify-content: center;
+    padding: 0.5rem 0.75rem;
     cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.2s;
-    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: color 0.15s, background-color 0.15s;
+    border-radius: 20px;
 }
 
 .footerButton:hover {
-    background-color: var(--hover-color);
+    color: var(--primary-color);
+    background-color: rgba(139, 92, 246, 0.06);
 }
 
 .deleteButton {
     color: #E74C3C;
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+    .createPostContainer { padding: 1rem; border-radius: 0; }
+    .postCard { border-radius: 0; border-left: none; border-right: none; }
+    .postCard:first-child, .postCard:last-child { border-radius: 0; }
+    .postCard:only-child { border-radius: 0; }
+    .userProfileImage { width: 40px; height: 40px; }
+    .actionButton { padding: 0.35rem 0.5rem; font-size: 0.75rem; gap: 0.2rem; }
+    .postSubmitBtn { padding: 0.5rem 1rem; font-size: 0.85rem; }
+    .commentsModal { width: 100%; height: 100%; border-radius: 0; max-width: 100%; }
+    .footerButton { padding: 0.5rem; font-size: 0.75rem; }
+}
+@media (max-width: 480px) {
+    .postActions { gap: 0; }
+    .actionButton span { display: none; }
+    .actionButton { padding: 0.4rem 0.5rem; }
 }
 
 .noPosts {

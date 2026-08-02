@@ -4,6 +4,7 @@ import DashboardLayout from '@/layout/DashboardLayout'
 import { useSelector, useDispatch } from 'react-redux';
 import { getallUsers } from '@/config/redux/action/authAction';
 import { BASE_URL } from '@/config';
+import { getAvatarUrl } from '@/utils/avatar';
 import { useRouter } from 'next/router';
 
 
@@ -38,7 +39,7 @@ export default function Discoverpage() {
                     router.push(`/profile/${username}`);
                 }
             }}>
-                <img src={`${BASE_URL}/uploads/${profile.userId?.profilePicture || 'default-profile.png'}`} alt="profile" style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover' }} />
+                <img src={getAvatarUrl(profile.userId?.name || 'User', 56)} alt="profile" style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover' }} />
                 <div style={{ flex: 1 }}>
                     <h3 style={{ margin: 0, fontSize: '1rem' }}>{profile.userId?.name || profile.name}</h3>
                     <p style={{ margin: 0, color: 'gray', fontSize: '0.9rem' }}>@{profile.userId?.username}</p>

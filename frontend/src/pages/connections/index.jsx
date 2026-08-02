@@ -4,6 +4,7 @@ import UserLayout from '@/layout/UserLayout';
 import DashboardLayout from '@/layout/DashboardLayout';
 import { getMyConnections, getConnectionRequests, respondToConnection } from '@/config/redux/action/profileAction';
 import { BASE_URL } from '@/config';
+import { getAvatarUrl } from '@/utils/avatar';
 import { useRouter } from 'next/router';
 import styles from './connections.module.css';
 
@@ -110,7 +111,7 @@ export default function MyConnectionsPage() {
                                 connections.map((conn) => (
                                     <div key={conn._id} className={styles.card}>
                                         <img 
-                                            src={`${BASE_URL}/uploads/${conn.connectedUserId?.profilePicture || 'default-profile.png'}`}
+                                            src={getAvatarUrl(conn.connectedUserId?.name || 'User', 48)}
                                             alt="profile"
                                             className={styles.avatar}
                                         />
@@ -138,7 +139,7 @@ export default function MyConnectionsPage() {
                                 requests.map((req) => (
                                     <div key={req._id} className={styles.card}>
                                         <img 
-                                            src={`${BASE_URL}/uploads/${req.userId?.profilePicture || 'default-profile.png'}`}
+                                            src={getAvatarUrl(req.userId?.name || 'User', 48)}
                                             alt="profile"
                                             className={styles.avatar}
                                         />
