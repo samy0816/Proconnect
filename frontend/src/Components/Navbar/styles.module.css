@@ -1,14 +1,11 @@
 .header {
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background-color: var(--primary-color);
+    border-bottom: 3px solid #111111;
     padding: 0 24px;
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
     width: 100%;
     z-index: 100;
-    border-bottom: 1px solid var(--border-color);
     height: 64px;
 }
 
@@ -28,11 +25,17 @@
 }
 
 .logo {
-    color: var(--primary-color);
+    color: #111111;
     font-family: var(--font-heading);
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     font-weight: 700;
     cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    background: #ffffff;
+    border: 2px solid #111111;
+    padding: 4px 10px;
+    box-shadow: 3px 3px 0 0 #111111;
 }
 
 .searchBar {
@@ -44,12 +47,13 @@
 }
 
 .searchBar input {
-    background-color: var(--surface-container);
-    border: none;
-    border-radius: 8px;
+    background-color: #ffffff;
+    border: 2px solid #111111;
+    border-radius: 4px;
     padding: 8px 12px 8px 36px;
     width: 260px;
     font-size: 14px;
+    box-shadow: 2px 2px 0 0 #111111;
 }
 
 .navLinks {
@@ -66,27 +70,29 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    color: var(--text-secondary-color);
-    padding: 8px 16px;
-    border-radius: 8px;
+    color: #111111;
+    padding: 6px 14px;
+    border: 2px solid transparent;
     font-size: 14px;
-    font-weight: 500;
-    transition: all 0.15s;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    transition: all 0.12s;
     cursor: pointer;
     background: transparent;
-    border: none;
-    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
 .navLinks a:hover, .profileBtn:hover {
-    background-color: var(--surface-container-low);
-    color: var(--text-color);
+    border-color: #111111;
+    background: #ffffff;
+    box-shadow: 3px 3px 0 0 #111111;
 }
 
 .navLinks a.active {
-    color: var(--primary-color);
-    background-color: var(--primary-container);
-    font-weight: 600;
+    border-color: #111111;
+    background: #ffffff;
+    box-shadow: 3px 3px 0 0 #111111;
 }
 
 .navLinks a svg, .profileBtn svg {
@@ -102,14 +108,13 @@
 
 .dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     right: 0;
-    background-color: var(--card-background-color);
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background-color: #ffffff;
+    border: 2px solid #111111;
+    box-shadow: 4px 4px 0 0 #111111;
     width: 220px;
-    padding: 0.5rem 0;
-    border: 1px solid var(--border-color);
+    padding: 8px 0;
 }
 
 .dropdownHeader {
@@ -117,18 +122,19 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 2px solid #111111;
     margin-bottom: 0.5rem;
 }
 
 .dropdownName {
-    font-weight: 600;
+    font-weight: 700;
+    font-family: var(--font-heading);
     color: var(--text-color);
 }
 
 .dropdownUsername {
     font-size: 0.85rem;
-    color: var(--text-secondary);
+    color: var(--text-secondary-color);
 }
 
 .dropdown a {
@@ -139,7 +145,7 @@
 }
 
 .dropdown a:hover {
-    background-color: var(--background-color);
+    background-color: var(--hover-color);
 }
 
 .authButtons {
@@ -148,38 +154,47 @@
 }
 
 .loginBtn, .joinBtn {
-    padding: 0.5rem 1rem;
-    border-radius: 1rem;
-    font-weight: 600;
-    border: 1px solid var(--primary-color);
-    transition: all 0.2s ease;
+    padding: 0.5rem 1.25rem;
+    border: 2px solid #111111;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    transition: all 0.12s;
 }
 
 .loginBtn {
-    color: var(--primary-color);
-    background-color: transparent;
+    color: #111111;
+    background-color: #ffffff;
+    box-shadow: 3px 3px 0 0 #111111;
 }
 
 .loginBtn:hover {
-    background-color: rgba(53, 37, 205, 0.08);
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 0 #111111;
 }
 
 .joinBtn {
-    color: white;
-    background-color: var(--primary-color);
+    color: #111111;
+    background-color: var(--accent-pink);
+    box-shadow: 3px 3px 0 0 #111111;
 }
 
 .joinBtn:hover {
-    background-color: var(--primary-hover);
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 0 #111111;
 }
 
 /* 📌 Demo mode banner */
 .demoBanner {
-    background: linear-gradient(135deg, #3525cd, #4d44e3);
-    color: white;
+    background: var(--accent-cyan);
+    color: #111111;
+    border-bottom: 2px solid #111111;
     text-align: center;
     padding: 0.5rem 1rem;
     font-size: 0.85rem;
+    font-weight: 600;
     letter-spacing: 0.01em;
 }
 .demoBannerHint {

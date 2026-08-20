@@ -14,12 +14,13 @@
 
 .modal {
     background: white;
-    border-radius: 16px;
+    border: 3px solid #111111;
+    border-radius: 4px;
     width: 90%;
     max-width: 600px;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 8px 8px 0 0 #111111;
     animation: slideUp 0.3s ease-out;
 }
 
@@ -101,17 +102,18 @@
 .topicInput {
     width: 100%;
     padding: 12px 16px;
-    border: 2px solid #e5e7eb;
-    border-radius: 10px;
+    border: 2px solid #111111;
+    border-radius: 4px;
     font-size: 1rem;
-    transition: all 0.2s;
-    font-family: inherit;
+    font-family: var(--font-body);
+    transition: all 0.12s;
+    box-shadow: 3px 3px 0 0 #111111;
 }
 
 .topicInput:focus {
     outline: none;
-    border-color: #3525cd;
-    box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
+    border-color: #111111;
+    box-shadow: 3px 3px 0 0 var(--accent-blue);
 }
 
 .topicInput:disabled {
@@ -122,19 +124,20 @@
 .toneSelect {
     width: 100%;
     padding: 12px 16px;
-    border: 2px solid #e5e7eb;
-    border-radius: 10px;
+    border: 2px solid #111111;
+    border-radius: 4px;
     font-size: 1rem;
+    font-family: var(--font-body);
     background: white;
     cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
+    transition: all 0.12s;
+    box-shadow: 3px 3px 0 0 #111111;
 }
 
 .toneSelect:focus {
     outline: none;
-    border-color: #3525cd;
-    box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
+    border-color: #111111;
+    box-shadow: 3px 3px 0 0 var(--accent-blue);
 }
 
 .toneSelect:disabled {
@@ -145,24 +148,27 @@
 .generateBtn {
     width: 100%;
     padding: 14px 24px;
-    background: linear-gradient(135deg, #3525cd 0%, #4d44e3 100%);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 1.05rem;
-    font-weight: 600;
+    background: var(--primary-color);
+    color: #111111;
+    border: 2px solid #111111;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.12s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     margin-top: 24px;
+    box-shadow: 4px 4px 0 0 #111111;
 }
 
 .generateBtn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(10, 102, 194, 0.3);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 0 #111111;
 }
 
 .generateBtn:disabled {
@@ -224,8 +230,8 @@
 
 .generatedText:focus {
     outline: none;
-    border-color: #3525cd;
-    box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
+    border-color: #111111;
+    box-shadow: 3px 3px 0 0 var(--accent-blue);
 }
 
 .actions {
@@ -249,8 +255,8 @@
 
 .regenerateBtn:hover:not(:disabled) {
     background: #f9fafb;
-    border-color: #3525cd;
-    color: #3525cd;
+    border-color: #111111;
+    color: #111111;
 }
 
 .regenerateBtn:disabled {

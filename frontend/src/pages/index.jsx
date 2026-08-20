@@ -45,7 +45,7 @@ export default function Home() {
           </div>
           <div className={styles.heroRight}>
             <img 
-              src="/images/Networking.gif" 
+              src="/images/Socialnetworking.png" 
               alt="Professional Networking" 
               className={styles.heroImage}
             />
