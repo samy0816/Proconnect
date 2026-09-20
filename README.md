@@ -1,4 +1,4 @@
-# ProConnect 🚀
+# ProConnect 
 
 A modern, full-stack professional networking platform inspired by LinkedIn, built with cutting-edge technologies and powered by AI features.
 
@@ -7,7 +7,7 @@ A modern, full-stack professional networking platform inspired by LinkedIn, buil
 ![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge&logo=mongodb)
 
-## 📋 Table of Contents
+##  Table of Contents
 
 - [Features](#features)
 - [Tech Stack](#tech-stack)
@@ -20,27 +20,27 @@ A modern, full-stack professional networking platform inspired by LinkedIn, buil
 - [Contributing](#contributing)
 - [License](#license)
 
-## ✨ Features
+##  Features
 
 ### Core Features
-- 🔐 **User Authentication** - Secure signup, login, and session management
-- 👤 **User Profiles** - Customizable profiles with bio, work experience, and education
-- 📝 **Posts & Feed** - Create, like, comment, and share posts with media support
-- 💬 **Comments System** - Nested comments with real-time updates
-- 🔗 **Networking** - Connect with other professionals and grow your network
-- 📸 **Media Upload** - Support for images and videos in posts
-- 🖼️ **Profile Pictures** - Upload and manage profile pictures
+-  **User Authentication** - Secure signup, login, and session management
+-  **User Profiles** - Customizable profiles with bio, work experience, and education
+- **Posts & Feed** - Create, like, comment, and share posts with media support
+-  **Comments System** - Nested comments with real-time updates
+- **Networking** - Connect with other professionals and grow your network
+- **Media Upload** - Support for images and videos in posts
+- **Profile Pictures** - Upload and manage profile pictures
 
-### AI-Powered Features 🤖
-- ✍️ **AI Post Generator** - Generate professional posts using AI based on topics
-- 💡 **AI Comment Suggestions** - Get intelligent comment suggestions for any post
-- 📄 **Resume Download** - Generate and download professional resumes as PDF
+### AI-Powered Features 
+-  **AI Post Generator** - Generate professional posts using AI based on topics
+-  **AI Comment Suggestions** - Get intelligent comment suggestions for any post
+-  **Resume Download** - Generate and download professional resumes as PDF
 
 ### Modern UI/UX
-- 🎨 Modern, clean, and responsive design
-- 🌓 Consistent color scheme and styling
-- 📱 Mobile-friendly interface
-- ⚡ Fast page transitions and loading states
+-  Modern, clean, and responsive design
+-  Consistent color scheme and styling
+-  Mobile-friendly interface
+-  Fast page transitions and loading states
 
 ## 🛠️ Tech Stack
 
@@ -60,7 +60,7 @@ A modern, full-stack professional networking platform inspired by LinkedIn, buil
 - **File Upload**: [Multer](https://github.com/expressjs/multer) - Multipart form data handling
 - **AI Integration**: [Hugging Face Inference API](https://huggingface.co/docs/api-inference/index) - AI model integration
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v18 or higher)
@@ -116,7 +116,7 @@ A modern, full-stack professional networking platform inspired by LinkedIn, buil
    - Frontend: [http://localhost:3000](http://localhost:3000)
    - Backend API: [http://localhost:5000](http://localhost:5000)
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ProConnect/
@@ -195,7 +195,7 @@ Automatically creates professional PDF resumes from user profile data.
 - Education
 - Skills
 
-## 🖼️ Screenshots
+##  Screenshots
 
 ### Landing Page
 Modern, professional landing page with clear call-to-action.
@@ -243,7 +243,7 @@ NEXT_PUBLIC_API_URL=http://localhost:5000    # Backend API URL
 - `PUT /api/users/profile/update` - Update profile
 - `POST /api/users/profile/picture` - Upload profile picture
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -253,24 +253,24 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Author
+## Author
 
 **Samarth**
 - GitHub: [@samy0816](https://github.com/samy0816)
 - LinkedIn: [Connect with me](https://linkedin.com/in/samyishere)
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - Hugging Face for AI model APIs
 - Next.js team for the amazing framework
 - MongoDB for the database solution
 - All contributors and supporters
 
-## 📞 Support
+## Support
 
 If you have any questions or need help, feel free to:
 - Open an issue in the repository
